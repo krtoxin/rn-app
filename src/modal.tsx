@@ -13,7 +13,7 @@ export default function ModalScreen() {
         duration: 1200,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
-      })
+      }),
     ).start();
   }, [spinAnim]);
 
@@ -27,7 +27,9 @@ export default function ModalScreen() {
       <Animated.View style={[styles.accentCircle, { transform: [{ rotate: spin }] }]}>
         <ActivityIndicator size="large" color="#00b894" />
       </Animated.View>
-      <ThemedText type="title" style={styles.loadingText}>Loading...</ThemedText>
+      <ThemedText type="title" style={styles.loadingText}>
+        Loading...
+      </ThemedText>
       <ThemedText style={styles.subText}>Please wait while we get things ready for you.</ThemedText>
     </ThemedView>
   );
@@ -39,11 +41,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: "#181d1b",
+    backgroundColor: '#181d1b',
   },
   accentCircle: {
-    backgroundColor: "#212824",
-    borderColor: "#00b894",
+    backgroundColor: '#212824',
+    borderColor: '#00b894',
     borderWidth: 3,
     borderRadius: 60,
     width: 74,
@@ -51,22 +53,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 32,
-    shadowColor: "#00b894",
+    shadowColor: '#00b894',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 10,
     elevation: 5,
   },
   loadingText: {
-    color: "#e8f6ef",
+    color: '#e8f6ef',
     marginBottom: 8,
     fontSize: 23,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     letterSpacing: 0.5,
   },
   subText: {
-    color: "#b5d6c6",
+    color: '#b5d6c6',
     fontSize: 15.5,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

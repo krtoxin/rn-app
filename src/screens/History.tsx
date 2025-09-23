@@ -5,12 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
 };
 
 type HistoryEntry = {
@@ -36,7 +36,7 @@ export default function History() {
 
       const storedHistoryStr = await AsyncStorage.getItem(`history_${user.username}`);
       const storedHistory = storedHistoryStr ? JSON.parse(storedHistoryStr) : [];
-      setHistory(storedHistory.reverse()); 
+      setHistory(storedHistory.reverse());
     })();
   }, []);
 
@@ -59,7 +59,7 @@ export default function History() {
           <FontAwesome5 name="arrow-left" size={22} color={PALETTE.accent} />
         </TouchableOpacity>
         <Text style={styles.title}>Your Activity History</Text>
-        <View style={{ width: 22 }} /> 
+        <View style={{ width: 22 }} />
       </View>
 
       <FlatList
@@ -71,9 +71,19 @@ export default function History() {
           <View style={styles.historyCard}>
             <Text style={styles.entryAction}>{item.action}</Text>
             <View style={styles.entryMetaRow}>
-              <FontAwesome5 name="tools" size={13} color={PALETTE.accent} style={{ marginRight: 7 }} />
+              <FontAwesome5
+                name="tools"
+                size={13}
+                color={PALETTE.accent}
+                style={{ marginRight: 7 }}
+              />
               <Text style={styles.entryMeta}>{item.tool}</Text>
-              <FontAwesome5 name="clock" size={12} color={PALETTE.textSecondary} style={{ marginLeft: 14, marginRight: 5 }} />
+              <FontAwesome5
+                name="clock"
+                size={12}
+                color={PALETTE.textSecondary}
+                style={{ marginLeft: 14, marginRight: 5 }}
+              />
               <Text style={styles.entryDate}>
                 {typeof item.timestamp === 'string'
                   ? new Date(item.timestamp).toLocaleString()
@@ -93,12 +103,12 @@ const styles = StyleSheet.create({
     backgroundColor: PALETTE.darkBg,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: PALETTE.darkBg,
     paddingHorizontal: 16,
-    paddingTop: Platform.OS === "web" ? 27 : 18,
+    paddingTop: Platform.OS === 'web' ? 27 : 18,
     paddingBottom: 18,
     borderBottomWidth: 1,
     borderBottomColor: PALETTE.cardBorder,
@@ -110,14 +120,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 21,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: PALETTE.textMain,
     letterSpacing: 0.5,
-    textAlign: "center",
+    textAlign: 'center',
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
     paddingTop: 18,
     paddingBottom: 24,
   },
@@ -129,27 +139,27 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: PALETTE.cardBorder,
-    shadowColor: "#000",
-    shadowOpacity: 0.10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
     elevation: 2,
   },
   entryAction: {
     color: PALETTE.textMain,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 7,
     letterSpacing: 0.2,
   },
   entryMetaRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
   },
   entryMeta: {
     color: PALETTE.textSecondary,
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 14.2,
   },
   entryDate: {
@@ -158,14 +168,14 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: PALETTE.darkBg,
   },
   error: {
-    color: "red",
+    color: 'red',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 20,
   },
 });

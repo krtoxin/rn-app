@@ -7,14 +7,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 type Props = {
   onLogin: () => void;
 } & NativeStackScreenProps<any, any>;
 
-const API_URL = "https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/login";
+const API_URL = 'https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/login';
 
 export default function Login({ navigation, onLogin }: Props) {
   const [username, setUsername] = useState('');
@@ -23,13 +23,13 @@ export default function Login({ navigation, onLogin }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    console.log("API_URL =", API_URL);
+    console.log('API_URL =', API_URL);
     setError(null);
     setLoading(true);
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        
+
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
@@ -66,13 +66,9 @@ export default function Login({ navigation, onLogin }: Props) {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={handleSubmit}
-        disabled={loading}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
         {loading ? (
-          <ActivityIndicator color="#fff"/>
+          <ActivityIndicator color="#fff" />
         ) : (
           <Text style={{ color: '#fff', fontWeight: 'bold' }}>Login</Text>
         )}

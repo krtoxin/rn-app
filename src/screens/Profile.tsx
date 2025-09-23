@@ -4,13 +4,13 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  error: "#e74c3c",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  error: '#e74c3c',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
 };
 
 type Stats = {
@@ -40,7 +40,9 @@ export default function Profile({ onLogout }: { onLogout: () => void }) {
       setUsername(user.username);
 
       const completedTasksStr = await AsyncStorage.getItem(`completedTasks_${user.username}`);
-      const completedBreathingStr = await AsyncStorage.getItem(`completedExercises_${user.username}`);
+      const completedBreathingStr = await AsyncStorage.getItem(
+        `completedExercises_${user.username}`,
+      );
       const soberCategoriesStr = await AsyncStorage.getItem(`soberCategories_${user.username}`);
       const moodDataStr = await AsyncStorage.getItem(`selectedMood_${user.username}`);
 
@@ -65,7 +67,10 @@ export default function Profile({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40, alignItems: "center" }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 40, alignItems: 'center' }}
+    >
       <Text style={styles.heading}>Profile</Text>
 
       <View style={styles.section}>
@@ -82,20 +87,46 @@ export default function Profile({ onLogout }: { onLogout: () => void }) {
         <Text style={styles.subHeading}>Your Statistics</Text>
         <View style={styles.statsList}>
           <View style={styles.statRow}>
-            <FontAwesome5 name="trophy" size={16} color={PALETTE.accent} style={{ marginRight: 8 }} />
-            <Text style={styles.statItem}>Challenges Completed: <Text style={{ color: PALETTE.accent }}>{stats.challenges}</Text></Text>
+            <FontAwesome5
+              name="trophy"
+              size={16}
+              color={PALETTE.accent}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.statItem}>
+              Challenges Completed:{' '}
+              <Text style={{ color: PALETTE.accent }}>{stats.challenges}</Text>
+            </Text>
           </View>
           <View style={styles.statRow}>
-            <FontAwesome5 name="lungs" size={16} color={PALETTE.accent} style={{ marginRight: 8 }} />
-            <Text style={styles.statItem}>Breathing Exercises Completed: <Text style={{ color: PALETTE.accent }}>{stats.breathingExercises}</Text></Text>
+            <FontAwesome5
+              name="lungs"
+              size={16}
+              color={PALETTE.accent}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.statItem}>
+              Breathing Exercises Completed:{' '}
+              <Text style={{ color: PALETTE.accent }}>{stats.breathingExercises}</Text>
+            </Text>
           </View>
           <View style={styles.statRow}>
             <FontAwesome5 name="leaf" size={16} color={PALETTE.accent} style={{ marginRight: 8 }} />
-            <Text style={styles.statItem}>Sobriety Categories Tracked: <Text style={{ color: PALETTE.accent }}>{stats.sobrietyCategories}</Text></Text>
+            <Text style={styles.statItem}>
+              Sobriety Categories Tracked:{' '}
+              <Text style={{ color: PALETTE.accent }}>{stats.sobrietyCategories}</Text>
+            </Text>
           </View>
           <View style={styles.statRow}>
-            <FontAwesome5 name="smile" size={16} color={PALETTE.accent} style={{ marginRight: 8 }} />
-            <Text style={styles.statItem}>Mood Entries: <Text style={{ color: PALETTE.accent }}>{stats.moodEntries}</Text></Text>
+            <FontAwesome5
+              name="smile"
+              size={16}
+              color={PALETTE.accent}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.statItem}>
+              Mood Entries: <Text style={{ color: PALETTE.accent }}>{stats.moodEntries}</Text>
+            </Text>
           </View>
         </View>
       </View>
@@ -113,26 +144,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: PALETTE.darkBg,
     padding: 0,
-    width: "100%",
+    width: '100%',
   },
   heading: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 24,
     marginBottom: 28,
     color: PALETTE.textMain,
     letterSpacing: 1,
-    width: "100%",
+    width: '100%',
   },
   section: {
     backgroundColor: PALETTE.cardBg,
     borderRadius: 16,
     padding: 18,
     marginBottom: 22,
-    width: "93%",
+    width: '93%',
     maxWidth: 370,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.13,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 7,
@@ -143,13 +174,13 @@ const styles = StyleSheet.create({
   subHeading: {
     fontSize: 20,
     marginBottom: 13,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: PALETTE.textMain,
     letterSpacing: 0.2,
   },
   infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 2,
   },
   infoText: {
@@ -161,11 +192,11 @@ const styles = StyleSheet.create({
   statsList: {
     marginTop: 0,
     marginBottom: 2,
-    width: "100%",
+    width: '100%',
   },
   statRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 5,
   },
   statItem: {
@@ -178,8 +209,8 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     paddingVertical: 14,
     paddingHorizontal: 32,
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     marginTop: 8,
     marginBottom: 22,
     shadowColor: PALETTE.accent,
@@ -189,8 +220,8 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   logoutButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
     letterSpacing: 0.15,
   },

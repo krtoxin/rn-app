@@ -3,7 +3,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 
 type JournalNavigationProp = StackNavigationProp<RootStackParamList, 'Journal'>;
@@ -14,21 +23,21 @@ type Entry = {
 };
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  accentSoft: "#009f7a",
-  accentLight: "#b2f5d6",
-  secondary: "#2c4037",
-  completed: "#27ae60",
-  disabled: "#2a3330",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
-  textMuted: "#7ea899",
-  clearBtn: "#212c28",
-  clearBtnPressed: "#1a2320",
-  clearBtnText: "#b5d6c6",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  accentSoft: '#009f7a',
+  accentLight: '#b2f5d6',
+  secondary: '#2c4037',
+  completed: '#27ae60',
+  disabled: '#2a3330',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
+  textMuted: '#7ea899',
+  clearBtn: '#212c28',
+  clearBtnPressed: '#1a2320',
+  clearBtnText: '#b5d6c6',
 };
 
 export default function Journal() {
@@ -79,21 +88,17 @@ export default function Journal() {
   };
 
   const handleClearEntries = async () => {
-    Alert.alert(
-      'Clear All Entries',
-      'Are you sure you want to clear all journal entries?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Clear',
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.removeItem(`journalEntries_${username}`);
-            setEntries([]);
-          },
+    Alert.alert('Clear All Entries', 'Are you sure you want to clear all journal entries?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Clear',
+        style: 'destructive',
+        onPress: async () => {
+          await AsyncStorage.removeItem(`journalEntries_${username}`);
+          setEntries([]);
         },
-      ]
-    );
+      },
+    ]);
   };
 
   if (!username) {
@@ -159,7 +164,7 @@ export default function Journal() {
         <Pressable
           style={({ pressed }) => [
             styles.button,
-            pressed && { backgroundColor: PALETTE.accentSoft }
+            pressed && { backgroundColor: PALETTE.accentSoft },
           ]}
           onPress={handleSave}
         >
@@ -179,13 +184,15 @@ export default function Journal() {
           )}
           {entries.length > 0 && (
             <Pressable
-              style={({ pressed }) => [
-                styles.clearButton,
-                pressed && styles.clearButtonPressed
-              ]}
+              style={({ pressed }) => [styles.clearButton, pressed && styles.clearButtonPressed]}
               onPress={handleClearEntries}
             >
-              <FontAwesome5 name="trash-alt" size={16} color={PALETTE.textMuted} style={{ marginRight: 7 }} />
+              <FontAwesome5
+                name="trash-alt"
+                size={16}
+                color={PALETTE.textMuted}
+                style={{ marginRight: 7 }}
+              />
               <Text style={styles.clearButtonText}>Clear All Entries</Text>
             </Pressable>
           )}
@@ -226,14 +233,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   journalCard: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: PALETTE.cardBg,
     borderRadius: 18,
     marginBottom: 20,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 8,
@@ -244,41 +251,41 @@ const styles = StyleSheet.create({
     borderColor: PALETTE.cardBorder,
     opacity: 1,
     minHeight: 80,
-    transitionDuration: "200ms",
+    transitionDuration: '200ms',
   },
   cardLeft: {
     marginRight: 18,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   iconCircle: {
     backgroundColor: PALETTE.secondary,
     borderRadius: 50,
     width: 44,
     height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: PALETTE.accent,
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
     shadowRadius: 5,
     elevation: 2,
   },
   cardContentRow: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     minWidth: 0,
   },
   cardContent: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     marginRight: 8,
     minWidth: 0,
   },
   heading: {
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: '700',
     color: PALETTE.textMain,
     marginBottom: 2,
     letterSpacing: 0.4,
@@ -286,13 +293,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13.5,
     color: PALETTE.textSecondary,
-    fontWeight: "400",
+    fontWeight: '400',
     letterSpacing: 0.08,
   },
   cardAction: {
     minWidth: 32,
-    alignItems: "flex-end",
-    justifyContent: "center",
+    alignItems: 'flex-end',
+    justifyContent: 'center',
     marginLeft: 8,
   },
   textarea: {
@@ -318,7 +325,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
-    letterSpacing: 0.15
+    letterSpacing: 0.15,
   },
   clearButton: {
     backgroundColor: PALETTE.clearBtn,
@@ -334,11 +341,11 @@ const styles = StyleSheet.create({
     borderColor: PALETTE.cardBorder,
   },
   clearButtonPressed: {
-    backgroundColor: PALETTE.clearBtnPressed
+    backgroundColor: PALETTE.clearBtnPressed,
   },
   clearButtonText: {
     color: PALETTE.clearBtnText,
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 14,
     marginLeft: 2,
     letterSpacing: 0.15,

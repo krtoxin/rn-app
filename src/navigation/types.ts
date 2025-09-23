@@ -1,7 +1,7 @@
 export type RootStackParamList = {
   MainTabs: { onLogout: () => void };
   Breathing: undefined;
-  BreathingDetails: { exerciseId: string }; 
+  BreathingDetails: { exerciseId: string };
   BreathingStart: { exerciseId: string };
   Journal: undefined;
   Program: undefined;

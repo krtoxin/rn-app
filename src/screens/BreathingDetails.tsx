@@ -16,18 +16,18 @@ type ExerciseDetails = {
 };
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  accentSoft: "#009f7a",
-  accentLight: "#b2f5d6",
-  secondary: "#2c4037",
-  completed: "#27ae60",
-  disabled: "#2a3330",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
-  textMuted: "#7ea899",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  accentSoft: '#009f7a',
+  accentLight: '#b2f5d6',
+  secondary: '#2c4037',
+  completed: '#27ae60',
+  disabled: '#2a3330',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
+  textMuted: '#7ea899',
 };
 
 const exerciseDetails: ExerciseDetails = {
@@ -75,8 +75,12 @@ export default function BreathingDetails() {
 
       const completedExercisesKey = `completedExercises_${user.username}`;
       const completedExercisesStr = await AsyncStorage.getItem(completedExercisesKey);
-      const completedArr: (string | number)[] = completedExercisesStr ? JSON.parse(completedExercisesStr) : [];
-      setIsCompleted(completedArr.includes(Number(exerciseId)) || completedArr.includes(exerciseId));
+      const completedArr: (string | number)[] = completedExercisesStr
+        ? JSON.parse(completedExercisesStr)
+        : [];
+      setIsCompleted(
+        completedArr.includes(Number(exerciseId)) || completedArr.includes(exerciseId),
+      );
     })();
   }, [exerciseId]);
 
@@ -108,15 +112,18 @@ export default function BreathingDetails() {
         <View style={styles.iconWrap}>
           <FontAwesome5 name="lungs" size={30} color={PALETTE.accent} />
         </View>
-        <Text style={styles.cardTitle} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.85}>
+        <Text
+          style={styles.cardTitle}
+          numberOfLines={2}
+          adjustsFontSizeToFit
+          minimumFontScale={0.85}
+        >
           {exercise.name}
         </Text>
         <Text style={styles.cardInfo}>
-          Inhale: {exercise.inhale}  |  Exhale: {exercise.exhale}
+          Inhale: {exercise.inhale} | Exhale: {exercise.exhale}
         </Text>
-        <Text style={styles.duration}>
-          Duration: {exercise.duration}
-        </Text>
+        <Text style={styles.duration}>Duration: {exercise.duration}</Text>
         <View style={styles.completedWrap}>
           {isCompleted ? (
             <FontAwesome5 name="check-circle" size={18} color={PALETTE.completed} />
@@ -124,7 +131,7 @@ export default function BreathingDetails() {
             <Pressable
               style={({ pressed }) => [
                 styles.button,
-                pressed && { backgroundColor: PALETTE.accentSoft }
+                pressed && { backgroundColor: PALETTE.accentSoft },
               ]}
               onPress={() => navigation.navigate('BreathingStart', { exerciseId })}
             >
@@ -170,15 +177,15 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     paddingHorizontal: 20,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 7,
     borderLeftWidth: 4,
-    borderLeftColor: "transparent",
+    borderLeftColor: 'transparent',
     borderWidth: 1,
     borderColor: PALETTE.cardBorder,
-    transitionDuration: "200ms",
+    transitionDuration: '200ms',
     minWidth: 220,
     minHeight: 150,
   },
@@ -190,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: PALETTE.textMain,
     textAlign: 'center',
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 4,
     width: '100%',
     paddingHorizontal: 4,
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
   cardInfo: {
     fontSize: 13.5,
     color: PALETTE.textSecondary,
-    fontWeight: "400",
+    fontWeight: '400',
     letterSpacing: 0.08,
     marginBottom: 4,
     textAlign: 'center',
@@ -213,8 +220,8 @@ const styles = StyleSheet.create({
   completedWrap: {
     marginTop: 7,
     minHeight: 22,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     backgroundColor: PALETTE.accent,
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
-    letterSpacing: 0.15
+    letterSpacing: 0.15,
   },
   errorContainer: {
     flex: 1,

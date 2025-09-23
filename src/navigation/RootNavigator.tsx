@@ -21,9 +21,7 @@ type RootNavigatorProps = {
 export default function RootNavigator({ onLogout }: RootNavigatorProps) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MainTabs">
-        {() => <MainTabs onLogout={onLogout} />}
-      </Stack.Screen>
+      <Stack.Screen name="MainTabs">{() => <MainTabs onLogout={onLogout} />}</Stack.Screen>
       <Stack.Screen name="Journal" component={Journal} />
       <Stack.Screen name="Breathing" component={Breathing} />
       <Stack.Screen name="Challenges" component={Challenges} />

@@ -23,10 +23,10 @@ function AuthStackScreen({ onLogin }: { onLogin: () => void }) {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name="Login">
-        {props => <Login {...props} onLogin={onLogin} />}
+        {(props) => <Login {...props} onLogin={onLogin} />}
       </AuthStack.Screen>
       <AuthStack.Screen name="Register">
-        {props => <Register {...props} onRegister={() => props.navigation.replace('Login')} />}
+        {(props) => <Register {...props} onRegister={() => props.navigation.replace('Login')} />}
       </AuthStack.Screen>
     </AuthStack.Navigator>
   );
@@ -37,7 +37,7 @@ function AppStackScreen({ onLogout }: { onLogout: () => void }) {
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
       <AppStack.Screen name="MainTabs" options={{ headerShown: false }}>
-        {props => <MainTabs {...props} onLogout={onLogout} />}
+        {(props) => <MainTabs {...props} onLogout={onLogout} />}
       </AppStack.Screen>
       <AppStack.Screen name="Journal" component={Journal} />
       <AppStack.Screen name="Breathing" component={Breathing} />

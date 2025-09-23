@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-const API_URL = "https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/register";
+const API_URL = 'https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/register';
 
 type Props = {
   onRegister: () => void;
@@ -24,7 +24,7 @@ export default function Register({ navigation, onRegister }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    console.log("API_URL =", API_URL);
+    console.log('API_URL =', API_URL);
     setError(null);
 
     if (password !== confirmPassword) {
@@ -91,11 +91,7 @@ export default function Register({ navigation, onRegister }: Props) {
         onChangeText={setDob}
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (

@@ -10,27 +10,30 @@ type BreathingStartNavigationProp = StackNavigationProp<RootStackParamList, 'Bre
 type BreathingStartRouteProp = RouteProp<RootStackParamList, 'BreathingStart'>;
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  accentSoft: "#009f7a",
-  accentLight: "#b2f5d6",
-  secondary: "#2c4037",
-  completed: "#27ae60",
-  disabled: "#2a3330",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
-  textMuted: "#7ea899",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  accentSoft: '#009f7a',
+  accentLight: '#b2f5d6',
+  secondary: '#2c4037',
+  completed: '#27ae60',
+  disabled: '#2a3330',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
+  textMuted: '#7ea899',
 };
 
-const exercises: Record<string, {
-  name: string;
-  inhale: number;
-  hold: number;
-  exhale: number;
-  duration: number;
-}> = {
+const exercises: Record<
+  string,
+  {
+    name: string;
+    inhale: number;
+    hold: number;
+    exhale: number;
+    duration: number;
+  }
+> = {
   '1': {
     name: 'Clear Mind',
     inhale: 4,
@@ -155,7 +158,9 @@ export default function BreathingStart() {
     if (!username) return;
     const completedExercisesKey = `completedExercises_${username}`;
     const completedExercisesStr = await AsyncStorage.getItem(completedExercisesKey);
-    const completedExercises: string[] = completedExercisesStr ? JSON.parse(completedExercisesStr) : [];
+    const completedExercises: string[] = completedExercisesStr
+      ? JSON.parse(completedExercisesStr)
+      : [];
     if (!completedExercises.includes(exerciseId)) {
       completedExercises.push(exerciseId);
       await AsyncStorage.setItem(completedExercisesKey, JSON.stringify(completedExercises));
@@ -264,15 +269,15 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   card: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: PALETTE.cardBg,
     borderRadius: 18,
     marginBottom: 30,
     paddingVertical: 18,
     paddingHorizontal: 24,
-    shadowColor: "#000",
-    shadowOpacity: 0.10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 12,
     elevation: 5,
@@ -282,20 +287,20 @@ const styles = StyleSheet.create({
     borderColor: PALETTE.cardBorder,
     minHeight: 70,
     minWidth: 220,
-    transitionDuration: "200ms",
+    transitionDuration: '200ms',
   },
   cardLeft: {
     marginRight: 13,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   iconCircle: {
     backgroundColor: PALETTE.secondary,
     borderRadius: 50,
     width: 48,
     height: 48,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: PALETTE.accent,
     shadowOpacity: 0.13,
     shadowOffset: { width: 0, height: 2 },
@@ -304,12 +309,12 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     minWidth: 0,
   },
   cardName: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
     color: PALETTE.textMain,
     letterSpacing: 0.4,
   },
@@ -317,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     marginBottom: 20,
     color: PALETTE.textMain,
-    fontWeight: "600",
+    fontWeight: '600',
     textAlign: 'center',
   },
   progressBarContainer: {
@@ -354,17 +359,17 @@ const styles = StyleSheet.create({
     color: PALETTE.completed,
     marginTop: 20,
     textAlign: 'center',
-    fontWeight: "700",
+    fontWeight: '700',
   },
   errorContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: PALETTE.darkBg,
   },
   error: {
-    color: "red",
+    color: 'red',
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

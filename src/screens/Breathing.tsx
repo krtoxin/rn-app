@@ -3,7 +3,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 
 type BreathingNavigationProp = StackNavigationProp<RootStackParamList, 'Breathing'>;
@@ -16,18 +24,18 @@ type Exercise = {
 };
 
 const PALETTE = {
-  darkBg: "#181d1b",
-  cardBg: "#212824",
-  cardBorder: "#2b3830",
-  accent: "#00b894",
-  accentSoft: "#009f7a",
-  accentLight: "#b2f5d6",
-  secondary: "#2c4037",
-  completed: "#27ae60",
-  disabled: "#2a3330",
-  textMain: "#e8f6ef",
-  textSecondary: "#b5d6c6",
-  textMuted: "#7ea899",
+  darkBg: '#181d1b',
+  cardBg: '#212824',
+  cardBorder: '#2b3830',
+  accent: '#00b894',
+  accentSoft: '#009f7a',
+  accentLight: '#b2f5d6',
+  secondary: '#2c4037',
+  completed: '#27ae60',
+  disabled: '#2a3330',
+  textMain: '#e8f6ef',
+  textSecondary: '#b5d6c6',
+  textMuted: '#7ea899',
 };
 
 export default function Breathing() {
@@ -118,14 +126,14 @@ export default function Breathing() {
         <FlatList
           data={exercises}
           numColumns={3}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{
             paddingTop: 22,
             paddingBottom: 16,
             gap: CARD_GAP,
           }}
           columnWrapperStyle={{
-            justifyContent: "space-between",
+            justifyContent: 'space-between',
             gap: CARD_GAP,
             marginBottom: CARD_GAP,
           }}
@@ -140,19 +148,13 @@ export default function Breathing() {
                   paddingBottom: 14,
                 },
                 completedExercises.includes(item.id) && styles.cardCompleted,
-                pressed && styles.cardPressed
+                pressed && styles.cardPressed,
               ]}
               onPress={() => handleExerciseClick(item)}
-              android_ripple={{ color: PALETTE.accentSoft + "22" }}
+              android_ripple={{ color: PALETTE.accentSoft + '22' }}
             >
-              <View style={styles.iconWrap}>
-                {item.icon}
-              </View>
-              <Text
-                style={styles.title}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
+              <View style={styles.iconWrap}>{item.icon}</View>
+              <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
                 {item.name}
               </Text>
               <Text style={styles.duration}>{item.duration}</Text>
@@ -202,27 +204,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 7,
     borderLeftWidth: 4,
-    borderLeftColor: "transparent",
+    borderLeftColor: 'transparent',
     borderWidth: 1,
     borderColor: PALETTE.cardBorder,
-    transitionDuration: "200ms",
+    transitionDuration: '200ms',
     marginVertical: 0,
   },
   cardPressed: {
     backgroundColor: PALETTE.secondary,
-    borderColor: PALETTE.accentSoft + "55",
+    borderColor: PALETTE.accentSoft + '55',
     elevation: 7,
-    shadowOpacity: 0.20,
+    shadowOpacity: 0.2,
     transform: [{ scale: 0.98 }],
   },
   cardCompleted: {
     borderLeftColor: PALETTE.completed,
-    backgroundColor: "#1b241e",
+    backgroundColor: '#1b241e',
     opacity: 0.93,
   },
   iconWrap: {
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: PALETTE.textMain,
     textAlign: 'center',
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 3,
     width: '100%',
     paddingHorizontal: 4,
@@ -242,25 +244,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: PALETTE.textMuted,
     marginBottom: 1,
-    fontWeight: "500",
+    fontWeight: '500',
     textAlign: 'center',
   },
   completedWrap: {
     marginTop: 7,
     minHeight: 22,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   errorContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: PALETTE.darkBg,
   },
   error: {
-    color: "red",
+    color: 'red',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 20,
   },
 });
