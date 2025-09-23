@@ -4,8 +4,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import axios from "axios";
 import { RootStackParamList } from "../navigation/types";
+
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+  secondary: "#2c4037",
+};
 
 type ChatbotNavigationProp = StackNavigationProp<RootStackParamList, "Chatbot">;
 
@@ -69,20 +79,6 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      // You can swap this with your own API as needed:
-      // const API_URL = "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct";
-      // const headers = {
-      //   Authorization: `Bearer YOUR_HF_API_KEY`,
-      //   "Content-Type": "application/json",
-      // };
-      // const payload = {
-      //   inputs: `You are an empathetic and professional psychologist who responds briefly and thoughtfully.\nUser: ${input}\nPsychologist:`,
-      // };
-      // const response = await axios.post(API_URL, payload, { headers });
-      // let botContent = response.data?.[0]?.generated_text || "";
-      // botContent = botContent.split("Psychologist:")[1]?.split("User:")[0]?.trim() || "I'm here to listen. Please tell me more.";
-
-      // For development: simple empathy mock AI (remove if using real API)
       let botContent = "";
       if (input.toLowerCase().includes("sad") || input.toLowerCase().includes("depressed")) {
         botContent = "I'm sorry you're feeling this way. Can you tell me more about what's troubling you?";
@@ -130,20 +126,28 @@ export default function Chatbot() {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#121212" }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: PALETTE.darkBg }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Explore" as never)}>
-          <FontAwesome5 name="arrow-left" size={20} color="#00b894" style={styles.icon} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.headerIconBtn}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <FontAwesome5 name="arrow-left" size={22} color={PALETTE.accent} />
         </TouchableOpacity>
         <Text style={styles.title}>AI Psychologist</Text>
-        <TouchableOpacity onPress={clearHistory}>
-          <FontAwesome5 name="trash" size={20} color="#00b894" style={styles.icon} />
+        <TouchableOpacity
+          onPress={clearHistory}
+          style={styles.headerIconBtn}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <FontAwesome5 name="trash" size={20} color={PALETTE.accent} />
         </TouchableOpacity>
       </View>
       <ScrollView
         style={styles.chatWindow}
         ref={scrollRef}
-        contentContainerStyle={{ paddingBottom: 80 }}
+        contentContainerStyle={{ paddingBottom: 92, paddingTop: 8, alignItems: "center" }}
         keyboardShouldPersistTaps="handled"
       >
         {messages.map((msg, index) => (
@@ -154,16 +158,18 @@ export default function Chatbot() {
               msg.role === "user" ? styles.userMessage : styles.botMessage,
             ]}
           >
-            <Text style={{ fontWeight: "bold" }}>
-              {msg.role === "user" ? "You" : "Psychologist"}:
+            <Text style={{flexShrink: 1}}>
+              <Text style={styles.msgLabel}>
+                {msg.role === "user" ? "You" : "Psychologist"}:
+              </Text>
+              <Text style={styles.msgText}> {msg.content}</Text>
             </Text>
-            <Text> {msg.content}</Text>
           </View>
         ))}
         {loading && (
-          <View style={styles.loading}>
-            <ActivityIndicator color="#00b894" size="small" />
-            <Text style={{ color: "#00b894", marginLeft: 5 }}>The psychologist is thinking...</Text>
+          <View style={[styles.message, styles.botMessage]}>
+            <ActivityIndicator color={PALETTE.accent} size="small" />
+            <Text style={{ color: PALETTE.accent, marginLeft: 8, fontWeight: "600" }}>Thinking...</Text>
           </View>
         )}
       </ScrollView>
@@ -172,14 +178,14 @@ export default function Chatbot() {
           style={styles.input}
           value={input}
           onChangeText={setInput}
-          placeholder="Share your thoughts here..."
-          placeholderTextColor="#888"
+          placeholder="Share your thoughts here…"
+          placeholderTextColor={PALETTE.textSecondary}
           onSubmitEditing={sendMessage}
           editable={!loading}
           returnKeyType="send"
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={loading}>
-          <FontAwesome5 name="paper-plane" size={20} color="#fff" />
+          <FontAwesome5 name="paper-plane" size={18} color="#fff" />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -189,51 +195,74 @@ export default function Chatbot() {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    padding: 10,
-    backgroundColor: "#1f1f1f",
+    paddingHorizontal: 10,
+    paddingVertical: 14,
+    backgroundColor: "#181d1b",
+    borderBottomWidth: 1,
+    borderBottomColor: "#232b27",
+    justifyContent: "space-between",
   },
-  icon: {
-    marginHorizontal: 6,
+  headerIconBtn: {
+    padding: 7,
+    borderRadius: 9,
+    backgroundColor: "transparent",
   },
   title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
+    fontSize: 20,
+    fontWeight: "700",
+    color: PALETTE.textMain,
+    letterSpacing: 0.7,
   },
   chatWindow: {
     flex: 1,
-    backgroundColor: "#000",
-    padding: 10,
+    backgroundColor: PALETTE.darkBg,
+    width: "100%",
+    paddingHorizontal: 0,
   },
   message: {
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-    maxWidth: "75%",
+    paddingVertical: 13,
+    paddingHorizontal: 18,
+    borderRadius: 16,
+    marginBottom: 12,
+    maxWidth: "85%",
+    shadowColor: "#000",
+    shadowOpacity: 0.07,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 1,
   },
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "#00b894",
-    color: "#fff",
+    backgroundColor: PALETTE.accent,
+    borderTopRightRadius: 5,
   },
   botMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#333",
-    color: "#fff",
+    backgroundColor: PALETTE.cardBg,
+    borderTopLeftRadius: 5,
+    borderColor: PALETTE.cardBorder,
+    borderWidth: 1,
   },
-  loading: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
-    marginBottom: 10,
+  msgLabel: {
+    fontWeight: "bold",
+    color: PALETTE.textMain,
+    fontSize: 15.5,
+  },
+  msgText: {
+    color: PALETTE.textMain,
+    fontSize: 15.5,
+    fontWeight: "400",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    backgroundColor: "#1f1f1f",
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === "ios" ? 26 : 18,
+    backgroundColor: "#181d1b",
+    borderTopWidth: 1,
+    borderTopColor: "#232b27",
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -241,17 +270,21 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: "#333",
-    color: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    backgroundColor: PALETTE.cardBg,
+    color: PALETTE.textMain,
     fontSize: 16,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
   },
   sendButton: {
-    backgroundColor: "#00b894",
-    borderRadius: 20,
-    padding: 10,
+    backgroundColor: PALETTE.accent,
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -265,6 +298,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
 });

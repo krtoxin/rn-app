@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useEffect, useState } from "react";
+import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { RootStackParamList } from "../navigation/types";
 
 type NotesNavigationProp = StackNavigationProp<RootStackParamList, "Notes">;
@@ -11,6 +11,16 @@ type NotesNavigationProp = StackNavigationProp<RootStackParamList, "Notes">;
 type Note = {
   id: number;
   content: string;
+};
+
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
 };
 
 export default function Notes() {
@@ -65,21 +75,33 @@ export default function Notes() {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Explore" as never)}>
-          <FontAwesome5 name="arrow-left" size={20} color="#00b894" style={styles.backIcon} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          accessibilityLabel="Back"
+        >
+          <FontAwesome5 name="arrow-left" size={20} color={PALETTE.accent} style={styles.backIcon} />
         </TouchableOpacity>
         <Text style={styles.title}>Notes</Text>
       </View>
       <TextInput
         style={styles.textarea}
         placeholder="Write a note..."
-        placeholderTextColor="#888"
+        placeholderTextColor={PALETTE.textSecondary}
         value={note}
         multiline
         onChangeText={setNote}
       />
-      <TouchableOpacity style={styles.addButton} onPress={addNote}>
-        <Text style={{ color: "#fff", fontWeight: "bold" }}>Add Note</Text>
+      <TouchableOpacity
+        style={[
+          styles.addButton,
+          { backgroundColor: note.trim() ? PALETTE.accent : PALETTE.cardBorder },
+        ]}
+        onPress={addNote}
+        disabled={!note.trim()}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.addButtonText}>Add Note</Text>
       </TouchableOpacity>
       <Text style={styles.subtitle}>Your Notes:</Text>
       <View style={styles.notesContainer}>
@@ -89,7 +111,7 @@ export default function Notes() {
           notes.map((n) => (
             <View key={n.id} style={styles.noteCard}>
               <Text style={styles.noteContent}>{n.content}</Text>
-              <TouchableOpacity onPress={() => deleteNote(n.id)}>
+              <TouchableOpacity onPress={() => deleteNote(n.id)} style={styles.deleteButton}>
                 <FontAwesome5 name="trash-alt" size={16} color="#e74c3c" style={styles.deleteIcon} />
               </TouchableOpacity>
             </View>
@@ -102,80 +124,101 @@ export default function Notes() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: "#121212",
-    minHeight: "100%",
     flex: 1,
+    backgroundColor: PALETTE.darkBg,
+    paddingHorizontal: 14,
+    paddingTop: Platform.OS === "web" ? 28 : 10,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 18,
+  },
+  backButton: {
+    marginRight: 8,
+    padding: 6,
+    borderRadius: 10
   },
   backIcon: {
-    marginRight: 10,
+    marginRight: 2,
   },
   title: {
     fontSize: 24,
-    fontWeight: "600",
-    color: "#fff",
-    marginBottom: 0,
+    fontWeight: "700",
+    color: PALETTE.textMain,
+    letterSpacing: 0.8,
+    marginLeft: 8,
   },
   textarea: {
     width: "100%",
-    minHeight: 70,
-    padding: 10,
-    fontSize: 14,
-    borderRadius: 8,
-    borderWidth: 0,
-    backgroundColor: "#1f1f1f",
-    color: "#fff",
+    minHeight: 68,
+    padding: 12,
+    fontSize: 15,
+    borderRadius: 11,
+    backgroundColor: PALETTE.cardBg,
+    color: PALETTE.textMain,
     marginBottom: 10,
     textAlignVertical: "top",
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
   },
   addButton: {
-    backgroundColor: "#00b894",
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    borderRadius: 9,
+    paddingVertical: 11,
+    paddingHorizontal: 20,
     alignSelf: "flex-end",
     marginBottom: 10,
   },
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 15,
+    letterSpacing: 0.2,
+  },
   subtitle: {
     fontSize: 18,
-    marginTop: 20,
+    marginTop: 18,
     fontWeight: "bold",
-    color: "#fff",
+    color: PALETTE.textMain,
+    letterSpacing: 0.6,
   },
   notesContainer: {
-    marginTop: 10,
+    marginTop: 12,
   },
   noteCard: {
-    backgroundColor: "#1f1f1f",
-    borderRadius: 8,
-    padding: 10,
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 12,
+    padding: 13,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 11,
     shadowColor: "#000",
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
   },
   noteContent: {
-    fontSize: 14,
-    color: "#ddd",
+    fontSize: 14.5,
+    color: PALETTE.textMain,
     flex: 1,
-    marginRight: 10,
+    marginRight: 14,
+  },
+  deleteButton: {
+    padding: 6,
+    borderRadius: 8,
+    backgroundColor: "rgba(231,76,60,0.09)",
   },
   deleteIcon: {
-    marginLeft: 10,
+    marginLeft: 0,
   },
   noNotes: {
     textAlign: "center",
-    color: "#aaa",
+    color: PALETTE.textSecondary,
     marginTop: 10,
+    fontSize: 14,
   },
   error: {
     color: "red",
@@ -187,6 +230,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
@@ -11,7 +11,8 @@ type MoodTrackerNavigationProp = StackNavigationProp<RootStackParamList, "MoodTr
 type Mood = {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon: string;
+  color: string;
 };
 
 type SavedMood = {
@@ -19,39 +20,69 @@ type SavedMood = {
   date: string;
 };
 
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+  secondary: "#2c4037",
+};
+
+const moods: Mood[] = [
+  {
+    id: "happy",
+    name: "Happy",
+    icon: "smile",
+    color: "#00d084",
+  },
+  {
+    id: "neutral",
+    name: "Neutral",
+    icon: "meh",
+    color: "#f1c40f",
+  },
+  {
+    id: "sad",
+    name: "Sad",
+    icon: "frown",
+    color: "#3498db",
+  },
+  {
+    id: "angry",
+    name: "Angry",
+    icon: "angry",
+    color: "#e74c3c",
+  },
+  {
+    id: "love",
+    name: "In Love",
+    icon: "grin-hearts",
+    color: "#ff69b4",
+  },
+  {
+    id: "confused",
+    name: "Confused",
+    icon: "question-circle",
+    color: "#9b59b6",
+  },
+];
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const res: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    res.push(arr.slice(i, i + size));
+  }
+  return res;
+}
+
 export default function MoodTracker() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [savedMood, setSavedMood] = useState<SavedMood | null>(null);
   const navigation = useNavigation<MoodTrackerNavigationProp>();
   const [username, setUsername] = useState<string | null>(null);
-
-  const moods: Mood[] = [
-    {
-      id: "happy",
-      name: "Happy",
-      icon: <FontAwesome5 name="smile" size={40} color="#00d084" />,
-    },
-    {
-      id: "neutral",
-      name: "Neutral",
-      icon: <FontAwesome5 name="meh" size={40} color="#f1c40f" />,
-    },
-    {
-      id: "sad",
-      name: "Sad",
-      icon: <FontAwesome5 name="frown" size={40} color="#3498db" />,
-    },
-    {
-      id: "angry",
-      name: "Angry",
-      icon: <FontAwesome5 name="angry" size={40} color="#e74c3c" />,
-    },
-    {
-      id: "love",
-      name: "In Love",
-      icon: <FontAwesome5 name="grin-hearts" size={40} color="#ff69b4" />,
-    },
-  ];
 
   useEffect(() => {
     (async () => {
@@ -107,42 +138,63 @@ export default function MoodTracker() {
     );
   }
 
+  const moodRows = chunkArray(moods, 3);
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Explore" as never)}>
-          <FontAwesome5 name="arrow-left" size={20} color="#00d084" style={styles.backIcon} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          accessibilityLabel="Back"
+        >
+          <FontAwesome5 name="arrow-left" size={24} color={PALETTE.accent} />
         </TouchableOpacity>
         <Text style={styles.title}>Mood Tracker</Text>
       </View>
       <View style={styles.moodsContainer}>
-        {moods.map((mood) => (
-          <TouchableOpacity
-            key={mood.id}
-            style={[
-              styles.moodCard,
-              selectedMood === mood.id && {
-                backgroundColor: "#1f1f1f",
-                shadowColor: "#00d084",
-                shadowOpacity: 0.6,
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: 8,
-                elevation: 8,
-              },
-            ]}
-            onPress={() => saveMood(mood.id)}
-            activeOpacity={0.8}
-          >
-            {mood.icon}
-            <Text style={styles.moodName}>{mood.name}</Text>
-          </TouchableOpacity>
+        {moodRows.map((row, i) => (
+          <View style={styles.moodRow} key={i}>
+            {row.map((mood) => {
+              const isSelected = selectedMood === mood.id;
+              return (
+                <TouchableOpacity
+                  key={mood.id}
+                  style={[
+                    styles.moodCard,
+                    isSelected && {
+                      borderColor: mood.color,
+                      borderWidth: 2,
+                      shadowColor: mood.color,
+                      shadowOpacity: 0.16,
+                      shadowRadius: 10,
+                      elevation: 7,
+                    },
+                  ]}
+                  onPress={() => saveMood(mood.id)}
+                  activeOpacity={0.85}
+                >
+                  <FontAwesome5 name={mood.icon as any} size={36} color={mood.color} />
+                  <Text style={styles.moodName}>{mood.name}</Text>
+                </TouchableOpacity>
+              );
+            })}
+            {row.length < 3 &&
+              Array.from({ length: 3 - row.length }).map((_, idx) => (
+                <View
+                  style={[styles.moodCard, { backgroundColor: "transparent", borderWidth: 0, elevation: 0 }]}
+                  key={`empty-${idx}`}
+                  pointerEvents="none"
+                />
+              ))}
+          </View>
         ))}
       </View>
       {savedMood && (
         <View style={styles.savedMoodContainer}>
           <Text style={styles.savedTitle}>Your Mood Today:</Text>
           <Text style={styles.savedMood}>
-            {savedMood.mood.charAt(0).toUpperCase() + savedMood.mood.slice(1)} on {savedMood.date}
+            {(moods.find(m => m.id === savedMood.mood)?.name ?? savedMood.mood)} on {savedMood.date}
           </Text>
         </View>
       )}
@@ -150,59 +202,87 @@ export default function MoodTracker() {
   );
 }
 
+const CARD_SIZE = 110;
+const CARD_GAP = 18;
+
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: "#121212",
-    minHeight: "100%",
     flex: 1,
+    backgroundColor: PALETTE.darkBg,
+    paddingHorizontal: 14,
+    paddingTop: Platform.OS === "web" ? 28 : 10,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 22,
+    paddingTop: 8,
+    paddingLeft: 6,
   },
-  backIcon: {
-    marginRight: 10,
+  backButton: {
+    marginRight: 18, 
+    marginLeft: 4,   
+    padding: 0,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "#fff",
+    fontSize: 26,
+    fontWeight: "700",
+    color: PALETTE.textMain,
+    letterSpacing: 1,
   },
   moodsContainer: {
+    marginTop: 6,
+    marginBottom: 26,
+    alignItems: "center",
+    width: "100%",
+  },
+  moodRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: CARD_GAP,
+    width: "100%",
   },
   moodCard: {
-    backgroundColor: "#2c2c2c",
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 18,
     alignItems: "center",
-    width: "30%",
-    marginBottom: 20,
+    justifyContent: "center",
+    width: CARD_SIZE,
+    height: CARD_SIZE,
+    marginHorizontal: CARD_GAP / 2,
+    borderWidth: 0,
+    borderColor: "transparent",
+    shadowColor: "#000",
+    shadowOpacity: 0.10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 2,
+    transitionDuration: "200ms",
   },
   moodName: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "#ddd",
+    marginTop: 13,
+    fontSize: 17,
+    color: PALETTE.textMain,
     textAlign: "center",
+    fontWeight: "700",
+    letterSpacing: 0.3,
   },
   savedMoodContainer: {
-    marginTop: 30,
+    marginTop: 14,
     alignItems: "center",
   },
   savedTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#fff",
+    color: PALETTE.textMain,
+    letterSpacing: 0.7,
   },
   savedMood: {
     fontSize: 16,
-    color: "#00d084",
+    color: PALETTE.accent,
+    fontWeight: "600",
   },
   error: {
     color: "red",
@@ -214,6 +294,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
 });

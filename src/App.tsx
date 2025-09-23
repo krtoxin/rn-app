@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
+import MainTabs from './navigation/MainTabs';
 import Login from './screens/Login';
 import Register from './screens/Register';
-import MainTabs from './navigation/MainTabs';
 
-import Program from './screens/Program';
-import Explore from './screens/Explore';
-import History from './screens/History';
-import Profile from './screens/Profile';
-import Journal from './screens/Journal';
 import Breathing from './screens/Breathing';
 import BreathingDetails from './screens/BreathingDetails';
 import BreathingStart from './screens/BreathingStart';
 import Challenges from './screens/Challenges';
-import Notes from './screens/Notes';
-import MoodTracker from './screens/MoodTracker';
 import Chatbot from './screens/Chatbot';
+import Journal from './screens/Journal';
+import MoodTracker from './screens/MoodTracker';
+import Notes from './screens/Notes';
 import SoberTracker from './screens/SoberTracker';
 
 const AuthStack = createNativeStackNavigator();
@@ -39,7 +35,7 @@ function AuthStackScreen({ onLogin }: { onLogin: () => void }) {
 const AppStack = createNativeStackNavigator();
 function AppStackScreen({ onLogout }: { onLogout: () => void }) {
   return (
-    <AppStack.Navigator>
+    <AppStack.Navigator screenOptions={{ headerShown: false }}>
       <AppStack.Screen name="MainTabs" options={{ headerShown: false }}>
         {props => <MainTabs {...props} onLogout={onLogout} />}
       </AppStack.Screen>

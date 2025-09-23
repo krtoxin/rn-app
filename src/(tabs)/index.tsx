@@ -1,98 +1,77 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  accent: "#00b894",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+};
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <View style={styles.logoCircle}>
+        <FontAwesome5 name="leaf" size={36} color={PALETTE.accent} />
+      </View>
+      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.subtitle}>Your wellness journey starts here.</Text>
+      <Text style={styles.muted}>
+        Use the tabs below to track your progress, practice mindfulness, and challenge yourself daily.
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: PALETTE.darkBg,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
   },
-  stepContainer: {
-    gap: 8,
+  logoCircle: {
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 44,
+    width: 88,
+    height: 88,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    borderWidth: 2,
+    borderColor: PALETTE.accent,
+    shadowColor: PALETTE.accent,
+    shadowOpacity: 0.13,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: PALETTE.textMain,
     marginBottom: 8,
+    letterSpacing: 1,
+    textAlign: "center",
+    width: "100%",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subtitle: {
+    fontSize: 18,
+    color: PALETTE.accent,
+    marginBottom: 14,
+    fontWeight: "600",
+    letterSpacing: 0.3,
+    textAlign: "center",
+    width: "100%",
+  },
+  muted: {
+    fontSize: 15.5,
+    color: PALETTE.textSecondary,
+    marginTop: 4,
+    textAlign: "center",
+    width: "100%",
   },
 });

@@ -3,11 +3,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, View, Pressable, Platform } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 
 type BreathingStartNavigationProp = StackNavigationProp<RootStackParamList, 'BreathingStart'>;
 type BreathingStartRouteProp = RouteProp<RootStackParamList, 'BreathingStart'>;
+
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  accentLight: "#b2f5d6",
+  secondary: "#2c4037",
+  completed: "#27ae60",
+  disabled: "#2a3330",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+  textMuted: "#7ea899",
+};
 
 const exercises: Record<string, {
   name: string;
@@ -160,17 +175,26 @@ export default function BreathingStart() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.outerContainer}>
       {/* Header/back/timer */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="arrow-left" size={24} color="#00d084" />
-        </TouchableOpacity>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <FontAwesome5 name="arrow-left" size={22} color={PALETTE.accent} />
+        </Pressable>
         {showUI && !exerciseComplete && (
           <Text style={styles.timer}>{Math.ceil(totalTimeLeft)}s</Text>
         )}
       </View>
-      <Text style={styles.heading}>{exercise.name}</Text>
+      <View style={styles.card}>
+        <View style={styles.cardLeft}>
+          <View style={styles.iconCircle}>
+            <FontAwesome5 name="lungs" size={24} color={PALETTE.accent} />
+          </View>
+        </View>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardName}>{exercise.name}</Text>
+        </View>
+      </View>
       {exerciseComplete ? (
         <Text style={styles.completeMessage}>Exercise Complete!</Text>
       ) : (
@@ -186,7 +210,7 @@ export default function BreathingStart() {
                       width: `${progress}%`,
                       backgroundColor:
                         phase === 'Inhale'
-                          ? '#00d084'
+                          ? PALETTE.accent
                           : phase === 'Hold'
                           ? '#f39c12'
                           : '#FF6347',
@@ -194,13 +218,13 @@ export default function BreathingStart() {
                   ]}
                 />
               </View>
-              <TouchableOpacity style={styles.pauseButton} onPress={togglePause}>
+              <Pressable style={styles.pauseButton} onPress={togglePause}>
                 {isRunning ? (
                   <FontAwesome5 name="pause" size={20} color="#fff" />
                 ) : (
                   <FontAwesome5 name="play" size={20} color="#fff" />
                 )}
-              </TouchableOpacity>
+              </Pressable>
             </>
           ) : (
             <Text style={styles.countdown}>{countdown}</Text>
@@ -212,11 +236,12 @@ export default function BreathingStart() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: PALETTE.darkBg,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: Platform.OS === 'web' ? 0 : 40,
   },
   header: {
     position: 'absolute',
@@ -227,16 +252,73 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '90%',
     alignItems: 'center',
+    zIndex: 10,
   },
-  heading: {
-    fontSize: 28,
-    color: '#fff',
-    marginBottom: 10,
+  backBtn: {
+    padding: 5,
+  },
+  timer: {
+    fontSize: 20,
+    color: PALETTE.textMuted,
+    fontWeight: 'bold',
+    marginLeft: 'auto',
+  },
+  card: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 18,
+    marginBottom: 30,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    shadowColor: "#000",
+    shadowOpacity: 0.10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    elevation: 5,
+    borderLeftWidth: 5,
+    borderLeftColor: PALETTE.accent,
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
+    minHeight: 70,
+    minWidth: 220,
+    transitionDuration: "200ms",
+  },
+  cardLeft: {
+    marginRight: 13,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconCircle: {
+    backgroundColor: PALETTE.secondary,
+    borderRadius: 50,
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: PALETTE.accent,
+    shadowOpacity: 0.13,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 7,
+    elevation: 2,
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "center",
+    minWidth: 0,
+  },
+  cardName: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: PALETTE.textMain,
+    letterSpacing: 0.4,
   },
   phase: {
-    fontSize: 24,
+    fontSize: 23,
     marginBottom: 20,
-    color: '#fff',
+    color: PALETTE.textMain,
+    fontWeight: "600",
+    textAlign: 'center',
   },
   progressBarContainer: {
     width: '80%',
@@ -253,11 +335,12 @@ const styles = StyleSheet.create({
   },
   countdown: {
     fontSize: 48,
-    color: '#00d084',
-    marginVertical: 20,
+    color: PALETTE.accent,
+    marginVertical: 24,
+    textAlign: 'center',
   },
   pauseButton: {
-    backgroundColor: '#00d084',
+    backgroundColor: PALETTE.accent,
     borderRadius: 25,
     width: 50,
     height: 50,
@@ -266,23 +349,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
   },
-  timer: {
-    fontSize: 20,
-    color: '#aaa',
-    fontWeight: 'bold',
-    marginLeft: 'auto',
-  },
   completeMessage: {
     fontSize: 32,
-    color: '#00d084',
+    color: PALETTE.completed,
     marginTop: 20,
     textAlign: 'center',
+    fontWeight: "700",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
   error: {
     color: "red",

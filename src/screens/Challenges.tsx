@@ -2,7 +2,22 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  accentLight: "#b2f5d6",
+  secondary: "#2c4037",
+  completed: "#27ae60",
+  disabled: "#2a3330",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+  textMuted: "#7ea899",
+};
 
 export default function Challenges() {
   const [isCompleted, setIsCompleted] = useState(false);
@@ -77,22 +92,26 @@ export default function Challenges() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="arrow-left" size={24} color="#00b894" style={styles.backIcon} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Today's Challenge</Text>
+    <View style={styles.outerContainer}>
+      <View style={styles.headerRow}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <FontAwesome5 name="arrow-left" size={22} color={PALETTE.accent} />
+        </Pressable>
+        <Text style={styles.heading}>Challenges</Text>
       </View>
-      <View style={styles.challenge}>
-        <Text style={styles.heading}>Meditate for 20 minutes</Text>
+      <View style={styles.card}>
+        <View style={styles.iconWrap}>
+          <FontAwesome5 name="medal" size={30} color={PALETTE.accent} />
+        </View>
+        <Text style={styles.cardTitle}>Today's Challenge</Text>
+        <Text style={styles.challengeText}>Meditate for 20 minutes</Text>
         <Text style={styles.timer}>24 hours left</Text>
         {isCompleted ? (
           <Text style={styles.completed}>✅ Challenge Completed!</Text>
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleComplete}>
+          <Pressable style={styles.button} onPress={handleComplete}>
             <Text style={styles.buttonText}>Mark as Completed</Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
       </View>
     </View>
@@ -100,74 +119,103 @@ export default function Challenges() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
+    paddingTop: Platform.OS === 'web' ? 0 : 40,
     alignItems: "center",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 4,
     width: "100%",
-    marginBottom: 20,
   },
-  backIcon: {
-    marginRight: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "#fff",
-  },
-  challenge: {
-    backgroundColor: "#1f1f1f",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 4,
-    width: "100%",
-    maxWidth: 400,
+  backBtn: {
+    marginRight: 13,
+    padding: 5,
   },
   heading: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 26,
+    color: PALETTE.textMain,
+    fontWeight: '700',
+    textAlign: 'left',
+  },
+  card: {
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 36,
+    paddingTop: 22,
+    paddingBottom: 18,
+    paddingHorizontal: 20,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 7,
+    borderLeftWidth: 4,
+    borderLeftColor: "transparent",
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
+    transitionDuration: "200ms",
+    minWidth: 250,
+    minHeight: 160,
+    width: "90%",
+    maxWidth: 400,
+  },
+  iconWrap: {
     marginBottom: 10,
-    color: "#fff",
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: PALETTE.textMain,
+    fontWeight: "700",
+    marginBottom: 8,
     textAlign: "center",
   },
+  challengeText: {
+    fontSize: 15,
+    color: PALETTE.textSecondary,
+    textAlign: "center",
+    marginBottom: 7,
+    fontWeight: "500",
+  },
   timer: {
-    fontSize: 14,
-    color: "#aaa",
-    marginBottom: 15,
+    fontSize: 13,
+    color: PALETTE.textMuted,
+    marginBottom: 13,
+    textAlign: "center",
   },
   button: {
-    backgroundColor: "#00b894",
+    backgroundColor: PALETTE.accent,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 8,
+    alignItems: "center",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "bold",
+    letterSpacing: 0.15,
   },
   completed: {
-    color: "#00d084",
+    color: PALETTE.completed,
     fontWeight: "bold",
     fontSize: 16,
-    marginTop: 6,
+    marginTop: 10,
+    textAlign: "center",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
   error: {
     color: "red",

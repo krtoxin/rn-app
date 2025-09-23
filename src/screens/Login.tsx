@@ -14,7 +14,7 @@ type Props = {
   onLogin: () => void;
 } & NativeStackScreenProps<any, any>;
 
-const API_URL = "https://urban-capybara-jjqq5v7rprjq9q9g6-9000.app.github.dev/api/login";
+const API_URL = "https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/login";
 
 export default function Login({ navigation, onLogin }: Props) {
   const [username, setUsername] = useState('');

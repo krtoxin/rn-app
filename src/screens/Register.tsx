@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-const API_URL = "https://urban-capybara-jjqq5v7rprjq9q9g6-9000.app.github.dev/api/register";
+const API_URL = "https://urban-capybara-jjqq5vr7prjq3q9q6-9000.app.github.dev/api/register";
 
 type Props = {
   onRegister: () => void;

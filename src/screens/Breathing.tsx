@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 
 type BreathingNavigationProp = StackNavigationProp<RootStackParamList, 'Breathing'>;
@@ -15,29 +15,45 @@ type Exercise = {
   icon: React.ReactNode;
 };
 
+const PALETTE = {
+  darkBg: "#181d1b",
+  cardBg: "#212824",
+  cardBorder: "#2b3830",
+  accent: "#00b894",
+  accentSoft: "#009f7a",
+  accentLight: "#b2f5d6",
+  secondary: "#2c4037",
+  completed: "#27ae60",
+  disabled: "#2a3330",
+  textMain: "#e8f6ef",
+  textSecondary: "#b5d6c6",
+  textMuted: "#7ea899",
+};
+
 export default function Breathing() {
   const [completedExercises, setCompletedExercises] = useState<number[]>([]);
   const [username, setUsername] = useState<string | null>(null);
   const navigation = useNavigation<BreathingNavigationProp>();
+  const { width } = useWindowDimensions();
 
   const exercises: Exercise[] = [
     {
       id: 1,
       name: 'Clear Mind',
       duration: '1 min',
-      icon: <FontAwesome5 name="wind" size={30} color="#00d084" />,
+      icon: <FontAwesome5 name="wind" size={30} color={PALETTE.accent} />,
     },
     {
       id: 2,
       name: 'Let Go of Worries',
       duration: '2 min',
-      icon: <FontAwesome5 name="smile" size={30} color="#00d084" />,
+      icon: <FontAwesome5 name="smile" size={30} color={PALETTE.accent} />,
     },
     {
       id: 3,
       name: 'Dream',
       duration: '3 min',
-      icon: <FontAwesome5 name="moon" size={30} color="#00d084" />,
+      icon: <FontAwesome5 name="moon" size={30} color={PALETTE.accent} />,
     },
   ];
 
@@ -84,98 +100,162 @@ export default function Breathing() {
     );
   }
 
+  const CARD_WIDTH = 120;
+  const CARD_GAP = 16;
+  const GRID_MAX_WIDTH = CARD_WIDTH * 3 + CARD_GAP * 2;
+  const gridWidth = Math.min(width - 24, GRID_MAX_WIDTH);
+  const actualCardWidth = (gridWidth - CARD_GAP * 2) / 3;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="arrow-left" size={24} color="#00d084" style={styles.backIcon} />
-        </TouchableOpacity>
+    <View style={styles.outerContainer}>
+      <View style={styles.headerRow}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <FontAwesome5 name="arrow-left" size={22} color={PALETTE.accent} />
+        </Pressable>
         <Text style={styles.heading}>Breathing</Text>
       </View>
-      <FlatList
-        data={exercises}
-        numColumns={3}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.grid}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => handleExerciseClick(item)}
-            activeOpacity={0.8}
-          >
-            {item.icon}
-            <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.duration}>{item.duration}</Text>
-            {completedExercises.includes(item.id) && (
-              <Text style={styles.completed}>✅ Completed</Text>
-            )}
-          </TouchableOpacity>
-        )}
-      />
+      <View style={[styles.gridWrap, { width: gridWidth, alignSelf: 'center' }]}>
+        <FlatList
+          data={exercises}
+          numColumns={3}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={{
+            paddingTop: 22,
+            paddingBottom: 16,
+            gap: CARD_GAP,
+          }}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            gap: CARD_GAP,
+            marginBottom: CARD_GAP,
+          }}
+          renderItem={({ item }) => (
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                {
+                  width: actualCardWidth,
+                  minHeight: 130,
+                  paddingTop: 18,
+                  paddingBottom: 14,
+                },
+                completedExercises.includes(item.id) && styles.cardCompleted,
+                pressed && styles.cardPressed
+              ]}
+              onPress={() => handleExerciseClick(item)}
+              android_ripple={{ color: PALETTE.accentSoft + "22" }}
+            >
+              <View style={styles.iconWrap}>
+                {item.icon}
+              </View>
+              <Text
+                style={styles.title}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {item.name}
+              </Text>
+              <Text style={styles.duration}>{item.duration}</Text>
+              <View style={styles.completedWrap}>
+                {completedExercises.includes(item.id) && (
+                  <FontAwesome5 name="check-circle" size={18} color={PALETTE.completed} />
+                )}
+              </View>
+            </Pressable>
+          )}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#121212',
+    backgroundColor: PALETTE.darkBg,
+    paddingTop: Platform.OS === 'web' ? 0 : 40,
   },
-  header: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 4,
   },
-  backIcon: {
-    marginRight: 10,
+  backBtn: {
+    marginRight: 13,
+    padding: 5,
   },
   heading: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: '600',
+    fontSize: 26,
+    color: PALETTE.textMain,
+    fontWeight: '700',
+    textAlign: 'left',
   },
-  grid: {
-    marginTop: 20,
-    gap: 15,
-    justifyContent: 'center',
+  gridWrap: {
+    flexGrow: 0,
+    alignSelf: 'center',
   },
   card: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: PALETTE.cardBg,
+    borderRadius: 15,
     alignItems: 'center',
-    margin: 5,
-    flex: 1,
-    minWidth: 90,
-    maxWidth: 120,
+    justifyContent: 'flex-start',
     elevation: 4,
     shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 7,
+    borderLeftWidth: 4,
+    borderLeftColor: "transparent",
+    borderWidth: 1,
+    borderColor: PALETTE.cardBorder,
+    transitionDuration: "200ms",
+    marginVertical: 0,
+  },
+  cardPressed: {
+    backgroundColor: PALETTE.secondary,
+    borderColor: PALETTE.accentSoft + "55",
+    elevation: 7,
+    shadowOpacity: 0.20,
+    transform: [{ scale: 0.98 }],
+  },
+  cardCompleted: {
+    borderLeftColor: PALETTE.completed,
+    backgroundColor: "#1b241e",
+    opacity: 0.93,
+  },
+  iconWrap: {
+    marginBottom: 7,
   },
   title: {
-    marginTop: 10,
-    fontSize: 14,
-    color: '#fff',
+    marginTop: 2,
+    fontSize: 13,
+    color: PALETTE.textMain,
     textAlign: 'center',
+    fontWeight: "700",
+    marginBottom: 3,
+    width: '100%',
+    paddingHorizontal: 4,
   },
   duration: {
     fontSize: 12,
-    color: '#aaa',
+    color: PALETTE.textMuted,
+    marginBottom: 1,
+    fontWeight: "500",
+    textAlign: 'center',
   },
-  completed: {
-    marginTop: 10,
-    fontSize: 12,
-    color: '#00d084',
-    fontWeight: 'bold',
+  completedWrap: {
+    marginTop: 7,
+    minHeight: 22,
+    alignItems: "center",
+    justifyContent: "center",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#121212",
+    backgroundColor: PALETTE.darkBg,
   },
   error: {
     color: "red",
